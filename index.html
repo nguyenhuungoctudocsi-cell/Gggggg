@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гор - Данные</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #8b5cf6;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #525252;
+            --border: #262626;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .header {
+            padding: 40px 24px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3);
+        }
+
+        .app-icon::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--bg-secondary);
+            border-radius: 18px;
+            z-index: 1;
+        }
+
+        .app-icon svg {
+            width: 40px;
+            height: 40px;
+            z-index: 2;
+            filter: drop-shadow(0 2px 8px rgba(14, 165, 233, 0.5));
+        }
+
+        .app-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-section {
+            padding: 0 24px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: var(--bg-tertiary);
+            padding: 4px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .nav-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-btn.active {
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+        }
+
+        .nav-btn.active::before {
+            opacity: 1;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 0 24px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-section {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .document-section {
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 560px;
+            transition: all 0.3s ease;
+        }
+
+        .document-container {
+            display: none;
+            width: 100%;
+        }
+
+        .document-container.active {
+            display: block;
+            animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .document-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .document-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .document-type {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            font-weight: 400;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .field-input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .field-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .photo-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .photo-upload {
+            width: 120px;
+            height: 150px;
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-upload::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            z-index: 0;
+        }
+
+        .photo-upload:hover::before {
+            opacity: 0.1;
+        }
+
+        .photo-upload:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.15);
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .photo-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .signature-section {
+            margin-bottom: 24px;
+        }
+
+        .signature-pad {
+            width: 100%;
+            height: 80px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: crosshair;
+            display: block;
+            transition: border-color 0.25s ease;
+        }
+
+        .signature-pad:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+        }
+
+        .signature-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .btn-small {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-small:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .action-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            color: var(--text-primary);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 20px;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .action-button:hover::before {
+            opacity: 1;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(14, 165, 233, 0.4);
+        }
+
+        .action-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Document preview styles - MODERNIZED and ENLARGED */
+        .passport-preview {
+            width: 320px;
+            height: 450px;
+            background: linear-gradient(135deg, #1a1f35, #0d1120);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transform: perspective(1000px) rotateY(5deg);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .passport-preview:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .passport-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0d2b4f, #003366);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .passport-cover h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .passport-cover p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .passport-content {
+            display: none;
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .passport-header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .passport-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .passport-country {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .passport-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .passport-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .passport-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .passport-photo {
+            width: 100px;
+            height: 120px;
+            background: #2a2a2a;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .passport-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .passport-data {
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .passport-data-label {
+            font-weight: 600;
+            min-width: 120px;
+            opacity: 0.8;
+        }
+
+        .passport-data-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .passport-signature {
+            margin-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+            text-align: center;
+        }
+
+        .passport-signature canvas {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            width: 180px;
+            height: 40px;
+            margin: 0 auto;
+            background: transparent;
+        }
+
+        .license-preview {
+            width: 360px;
+            height: 240px;
+            background: linear-gradient(135deg, #1a1f35, #0d1120);
+            border-radius: 16px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .license-preview:hover {
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .license-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4cc9f0;
+            text-transform: uppercase;
+        }
+
+        .license-country {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .license-body {
+            display: flex;
+            gap: 15px;
+        }
+
+        .license-photo {
+            width: 80px;
+            height: 100px;
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .license-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .license-data {
+            flex: 1;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 100px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .license-data::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .license-data::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        .license-data-row {
+            display: flex;
+        }
+
+        .license-data-label {
+            font-weight: 600;
+            min-width: 95px;
+            opacity: 0.8;
+        }
+
+        .license-data-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .license-categories {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .license-category {
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .license-footer {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .license-footer canvas {
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            width: 120px;
+            height: 30px;
+            background: transparent;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 20px;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .view-mode {
+            display: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .edit-button {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+        }
+
+        .edit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+        }
+
+        /* NEW: class-based form view state (avoid inline styles) */
+        .document-container.form-view .field-group,
+        .document-container.form-view .photo-section,
+        .document-container.form-view .signature-section,
+        .document-container.form-view .action-button {
+            display: none !important;
+        }
+        .document-container.form-view .view-mode {
+            display: block !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                grid-template-columns: 1fr;
+                gap: 0;
+                padding: 2px;
+            }
+
+            .nav-btn {
+                padding: 14px 16px;
+                border-radius: 10px;
+            }
+
+            .passport-preview, .license-preview {
+                transform: none;
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="url(#gradient)" stroke-width="1.5" fill="url(#fillGradient)"/>
+                    <path d="M12 8V16M8 10L16 14M16 10L8 14" stroke="white" stroke-width="1" stroke-linecap="round"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="fillGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.1" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="app-title">Гор - Данные</h1>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showDocument('passport')">
+                    <span>Паспорт</span>
+                </button>
+                <button class="nav-btn" onclick="showDocument('license')">
+                    <span>Водительские права</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <!-- Паспорт -->
+                <div id="passportForm" class="document-container active">
+                    <div class="document-header">
+                        <h2 class="document-title">Паспорт гражданина</h2>
+                        <p class="document-type">Внутренний документ</p>
+                    </div>
+
+                    <div class="photo-section">
+                        <div class="photo-upload" onclick="document.getElementById('passportPhotoInput').click()">
+                            <div class="photo-preview" id="passportPhotoPreview">
+                                <div class="photo-placeholder">
+                                    <div style="font-size: 1.75rem; margin-bottom: 6px;">📷</div>
+                                    <div>Фото 3×4</div>
+                                </div>
+                            </div>
+                            <input type="file" id="passportPhotoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this, 'passportPhotoPreview')">
+                        </div>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Фамилия</label>
+                            <input type="text" class="field-input" id="passportSurname" placeholder="Иванов">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Имя</label>
+                            <input type="text" class="field-input" id="passportName" placeholder="Иван">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Отчество</label>
+                        <input type="text" class="field-input" id="passportPatronymic" placeholder="Иванович">
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Дата рождения</label>
+                            <input type="date" class="field-input" id="passportBirthDate">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Пол</label>
+                            <select class="field-input" id="passportGender">
+                                <option value="">Выберите</option>
+                                <option value="М">Мужской</option>
+                                <option value="Ж">Женский</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Место рождения</label>
+                        <input type="text" class="field-input" id="passportBirthPlace" placeholder="г. Москва">
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Серия и номер</label>
+                            <input type="text" class="field-input" id="passportNumber" placeholder="0000 000000">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Код подразделения</label>
+                            <input type="text" class="field-input" id="passportCode" placeholder="000-000">
+                        </div>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Дата выдачи</label>
+                            <input type="date" class="field-input" id="passportIssueDate">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Кем выдан</label>
+                            <input type="text" class="field-input" id="passportIssuer" placeholder="ОВД России">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Адрес регистрации</label>
+                        <input type="text" class="field-input" id="passportAddress" placeholder="г. Москва, ул. Ленина, д.1, кв.1">
+                    </div>
+
+                    <div class="signature-section">
+                        <label class="field-label">Подпись владельца</label>
+                        <canvas class="signature-pad" id="passportSignature" width="372" height="80"></canvas>
+                        <div class="signature-controls">
+                            <button class="btn-small" onclick="clearSignature('passportSignature')">Очистить подпись</button>
+                        </div>
+                    </div>
+
+                    <button class="action-button" id="passportAction" onclick="saveDocument('passport')">
+                        <span>Создать паспорт</span>
+                    </button>
+
+                    <div class="view-mode" id="passportViewMode">
+                        <p>Паспорт уже создан</p>
+                        <button class="edit-button" onclick="editDocument('passport')">Изменить паспорт</button>
+                    </div>
+                </div>
+
+                <!-- Водительские права -->
+                <div id="licenseForm" class="document-container">
+                    <div class="document-header">
+                        <h2 class="document-title">Водительские права</h2>
+                        <p class="document-type">Выберите доступные категории</p>
+                    </div>
+
+                    <div class="photo-section">
+                        <div class="photo-upload" onclick="document.getElementById('licensePhotoInput').click()">
+                            <div class="photo-preview" id="licensePhotoPreview">
+                                <div class="photo-placeholder">
+                                    <div style="font-size: 1.75rem; margin-bottom: 6px;">📷</div>
+                                    <div>Фото 3×4</div>
+                                </div>
+                            </div>
+                            <input type="file" id="licensePhotoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this, 'licensePhotoPreview')">
+                        </div>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Фамилия</label>
+                            <input type="text" class="field-input" id="licenseSurname" placeholder="Иванов">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Имя</label>
+                            <input type="text" class="field-input" id="licenseName" placeholder="Иван">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Отчество</label>
+                        <input type="text" class="field-input" id="licensePatronymic" placeholder="Иванович">
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Дата рождения</label>
+                            <input type="date" class="field-input" id="licenseBirthDate">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Место рождения</label>
+                            <input type="text" class="field-input" id="licenseBirthPlace" placeholder="г. Москва">
+                        </div>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Серия и номер</label>
+                            <input type="text" class="field-input" id="licenseNumber" placeholder="00 АА 000000">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Дата выдачи</label>
+                            <input type="date" class="field-input" id="licenseIssueDate">
+                        </div>
+                    </div>
+
+                    <div class="field-grid">
+                        <div class="field-group">
+                            <label class="field-label">Срок действия</label>
+                            <input type="date" class="field-input" id="licenseExpiryDate">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Кем выдано</label>
+                            <input type="text" class="field-input" id="licenseIssuer" placeholder="ГИБДД России">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Категории прав</label>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px;">
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="A"> A
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="B"> B
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="C"> C
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="D"> D
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="BE"> BE
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="CE"> CE
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="DE"> DE
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                                <input type="checkbox" name="licenseCategory" value="M"> M
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="signature-section">
+                        <label class="field-label">Подпись владельца</label>
+                        <canvas class="signature-pad" id="licenseSignature" width="372" height="80"></canvas>
+                        <div class="signature-controls">
+                            <button class="btn-small" onclick="clearSignature('licenseSignature')">Очистить подпись</button>
+                        </div>
+                    </div>
+
+                    <button class="action-button" id="licenseAction" onclick="saveDocument('license')">
+                        <span>Создать права</span>
+                    </button>
+
+                    <div class="view-mode" id="licenseViewMode">
+                        <p>Водительские права уже созданы</p>
+                        <button class="edit-button" onclick="editDocument('license')">Изменить права</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document-section">
+                <div id="passportPreview" class="document-container active">
+                    <div class="passport-preview">
+                        <div class="passport-cover">
+                            <h3>ГОРОДСКАЯ ФЕДЕРАЦИЯ</h3>
+                            <p>ПАСПОРТ</p>
+                        </div>
+                        <div class="passport-content">
+                            <div class="passport-header">
+                                <h3>ПАСПОРТ ГРАЖДАНИНА</h3>
+                                <div class="passport-country">ГОРОДСКАЯ ФЕДЕРАЦИЯ</div>
+                            </div>
+                            <div class="passport-body">
+                                <div class="passport-photo" id="previewPassportPhoto">
+                                    ФОТО
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Фамилия:</div>
+                                    <div class="passport-data-value" id="previewSurname">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Имя:</div>
+                                    <div class="passport-data-value" id="previewName">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Отчество:</div>
+                                    <div class="passport-data-value" id="previewPatronymic">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Дата рождения:</div>
+                                    <div class="passport-data-value" id="previewBirthDate">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Место рождения:</div>
+                                    <div class="passport-data-value" id="previewBirthPlace">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Пол:</div>
+                                    <div class="passport-data-value" id="previewGender">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Серия и номер:</div>
+                                    <div class="passport-data-value" id="previewNumber">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Код подразделения:</div>
+                                    <div class="passport-data-value" id="previewCode">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Дата выдачи:</div>
+                                    <div class="passport-data-value" id="previewIssueDate">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Кем выдан:</div>
+                                    <div class="passport-data-value" id="previewIssuer">—</div>
+                                </div>
+                                <div class="passport-data">
+                                    <div class="passport-data-label">Адрес регистрации:</div>
+                                    <div class="passport-data-value" id="previewAddress">—</div>
+                                </div>
+                            </div>
+                            <div class="passport-signature">
+                                <canvas id="previewSignature" width="180" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="licensePreview" class="document-container">
+                    <div class="license-preview">
+                        <div class="license-header">
+                            <div class="license-title">ВОДИТЕЛЬСКОЕ УДОСТОВЕРЕНИЕ</div>
+                            <div class="license-country">ГОРОДСКАЯ ФЕДЕРАЦИЯ</div>
+                        </div>
+                        <div class="license-body">
+                            <div class="license-photo" id="previewLicensePhoto">
+                                ФОТО
+                            </div>
+                            <div class="license-data">
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Фамилия:</div>
+                                    <div class="license-data-value" id="previewLicenseSurname">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Имя:</div>
+                                    <div class="license-data-value" id="previewLicenseName">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Отчество:</div>
+                                    <div class="license-data-value" id="previewLicensePatronymic">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Дата рождения:</div>
+                                    <div class="license-data-value" id="previewLicenseBirthDate">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Место рождения:</div>
+                                    <div class="license-data-value" id="previewLicenseBirthPlace">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Дата выдачи:</div>
+                                    <div class="license-data-value" id="previewLicenseIssueDate">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Срок действия:</div>
+                                    <div class="license-data-value" id="previewLicenseExpiryDate">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Номер:</div>
+                                    <div class="license-data-value" id="previewLicenseNumber">—</div>
+                                </div>
+                                <div class="license-data-row">
+                                    <div class="license-data-label">Кем выдано:</div>
+                                    <div class="license-data-value" id="previewLicenseIssuer">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="license-categories" id="previewLicenseCategories">
+                            <!-- Categories will be added here -->
+                        </div>
+                        <div class="license-footer">
+                            <canvas id="previewLicenseSignature" width="120" height="30"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Photo upload handling (keeps original behavior)
+        function handlePhotoUpload(input, previewId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Uploaded photo">`;
+
+                    // Save photo to storage
+                    const docType = previewId.includes('passport') ? 'passport' : 'license';
+                    saveToStorage(`${docType}_photo`, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Signature functionality (keeps original UX, but more robust)
+        function setupSignaturePads() {
+            setupSignaturePad('passportSignature', 'previewSignature');
+            setupSignaturePad('licenseSignature', 'previewLicenseSignature');
+        }
+
+        function setupSignaturePad(canvasId, previewCanvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+
+            function resizeCanvas() {
+                const ratio = window.devicePixelRatio || 1;
+                const displayWidth = canvas.clientWidth || canvas.width;
+                const displayHeight = canvas.clientHeight || canvas.height;
+                canvas.width = Math.round(displayWidth * ratio);
+                canvas.height = Math.round(displayHeight * ratio);
+                canvas.style.width = displayWidth + 'px';
+                canvas.style.height = displayHeight + 'px';
+                ctx.scale(ratio, ratio);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+
+            function startDrawing(e) {
+                drawing = true;
+                ctx.beginPath();
+                const p = getPos(e);
+                ctx.moveTo(p.x, p.y);
+            }
+
+            function draw(e) {
+                if (!drawing) return;
+                const p = getPos(e);
+                ctx.lineTo(p.x, p.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                updateSignaturePreview(canvasId, previewCanvasId);
+            }
+
+            function stopDrawing() {
+                if (!drawing) return;
+                drawing = false;
+                ctx.beginPath();
+
+                // Save signature to storage
+                const type = canvasId.includes('passport') ? 'passport' : 'license';
+                try {
+                    saveToStorage(`${type}_signature`, canvas.toDataURL());
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            canvas.addEventListener('touchstart', function (e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const evt = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(evt);
+            }, {passive:false});
+            canvas.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const evt = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(evt);
+            }, {passive:false});
+            canvas.addEventListener('touchend', function (e) {
+                e.preventDefault();
+                stopDrawing();
+            }, {passive:false});
+        }
+
+        function updateSignaturePreview(sourceId, targetId) {
+            const sourceCanvas = document.getElementById(sourceId);
+            const targetCanvas = document.getElementById(targetId);
+            if (!sourceCanvas || !targetCanvas) return;
+            const img = new Image();
+            img.onload = function() {
+                const ctx = targetCanvas.getContext('2d');
+                ctx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+                ctx.drawImage(img, 0, 0, targetCanvas.width, targetCanvas.height);
+            };
+            img.src = sourceCanvas.toDataURL();
+        }
+
+        function clearSignature(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const previewCanvasId = canvasId === 'passportSignature' ? 'previewSignature' : 'previewLicenseSignature';
+            const previewCanvas = document.getElementById(previewCanvasId);
+            if (previewCanvas) {
+                const pctx = previewCanvas.getContext('2d');
+                pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+            }
+
+            const type = canvasId.includes('passport') ? 'passport' : 'license';
+            removeFromStorage(`${type}_signature`);
+        }
+
+        // Local storage helpers (consistent key naming)
+        function saveToStorage(key, value) {
+            try {
+                localStorage.setItem(`gorData_${key}`, value);
+            } catch (e) {
+                console.error('Storage write failed', e);
+            }
+        }
+
+        function getFromStorage(key) {
+            return localStorage.getItem(`gorData_${key}`);
+        }
+
+        function removeFromStorage(key) {
+            localStorage.removeItem(`gorData_${key}`);
+        }
+
+        // Get form data (keeps original field names)
+        function getFormData(type) {
+            const data = {};
+
+            if (type === 'passport') {
+                data.surname = document.getElementById('passportSurname').value;
+                data.name = document.getElementById('passportName').value;
+                data.patronymic = document.getElementById('passportPatronymic').value;
+                data.birthDate = document.getElementById('passportBirthDate').value;
+                data.gender = document.getElementById('passportGender').value;
+                data.birthPlace = document.getElementById('passportBirthPlace').value;
+                data.number = document.getElementById('passportNumber').value;
+                data.code = document.getElementById('passportCode').value;
+                data.issueDate = document.getElementById('passportIssueDate').value;
+                data.issuer = document.getElementById('passportIssuer').value;
+                data.address = document.getElementById('passportAddress').value;
+            } else {
+                data.surname = document.getElementById('licenseSurname').value;
+                data.name = document.getElementById('licenseName').value;
+                data.patronymic = document.getElementById('licensePatronymic').value;
+                data.birthDate = document.getElementById('licenseBirthDate').value;
+                data.birthPlace = document.getElementById('licenseBirthPlace').value;
+                data.number = document.getElementById('licenseNumber').value;
+                data.issueDate = document.getElementById('licenseIssueDate').value;
+                data.expiryDate = document.getElementById('licenseExpiryDate').value;
+                data.issuer = document.getElementById('licenseIssuer').value;
+
+                data.categories = [];
+                document.querySelectorAll('input[name="licenseCategory"]:checked').forEach(checkbox => {
+                    data.categories.push(checkbox.value);
+                });
+            }
+
+            return data;
+        }
+
+        // Validate (keeps original behavior)
+        function validateForm(type) {
+            const requiredFields = type === 'passport' 
+                ? ['passportSurname', 'passportName', 'passportBirthDate', 'passportNumber']
+                : ['licenseSurname', 'licenseName', 'licenseBirthDate', 'licenseNumber'];
+
+            let isValid = true;
+
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value || !field.value.trim()) {
+                    field.style.borderColor = 'var(--error)';
+                    isValid = false;
+                    setTimeout(() => { field.style.borderColor = ''; }, 2000);
+                }
+            });
+
+            const photoPreview = document.getElementById(`${type}PhotoPreview`);
+            if (!photoPreview.querySelector('img')) {
+                alert('Пожалуйста, загрузите фотографию');
+                isValid = false;
+            }
+
+            const signatureCanvas = document.getElementById(`${type}Signature`);
+            const signatureCtx = signatureCanvas.getContext('2d');
+            let isEmpty = true;
+            try {
+                const imageData = signatureCtx.getImageData(0, 0, signatureCanvas.width, signatureCanvas.height);
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i + 3] !== 0) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+            } catch (e) {
+                // canvas might be tainted or empty — assume empty
+                isEmpty = true;
+            }
+
+            if (isEmpty) {
+                alert('Пожалуйста, поставьте подпись');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // New: showDocument uses class-based toggling and preserves spans
+        function showDocument(type) {
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            // find first matching by inner text is fragile; instead use index logic as original
+            const navBtns = document.querySelectorAll('.nav-btn');
+            if (type === 'passport') navBtns[0].classList.add('active'); else navBtns[1].classList.add('active');
+
+            // Update forms and previews (class-based)
+            document.querySelectorAll('.document-container').forEach(container => container.classList.remove('active'));
+            const form = document.getElementById(`${type}Form`);
+            if (form) form.classList.add('active');
+
+            document.getElementById('passportPreview').classList.toggle('active', type === 'passport');
+            document.getElementById('licensePreview').classList.toggle('active', type === 'license');
+
+            // Load saved data if exists
+            loadDocumentData(type);
+        }
+
+        // Switch to view mode by adding class 'form-view'
+        function switchToViewMode(type) {
+            const form = document.getElementById(`${type}Form`);
+            if (form) form.classList.add('form-view');
+
+            // Hide action button visually by CSS class; keep span intact
+            // Update preview
+            updatePreview(type);
+        }
+
+        // Switch to edit mode by removing class 'form-view'
+        function switchToEditMode(type) {
+            const form = document.getElementById(`${type}Form`);
+            if (form) form.classList.remove('form-view');
+
+            // Change action button label safely
+            const actionButton = document.getElementById(`${type}Action`);
+            if (actionButton) {
+                const span = actionButton.querySelector('span');
+                if (span) span.textContent = 'Сохранить изменения';
+                else actionButton.textContent = 'Сохранить изменения';
+                actionButton.style.display = '';
+                actionButton.onclick = function() { saveDocument(type); };
+            }
+
+            // Load data into form
+            loadFormData(type);
+        }
+
+        // Load form fields from storage (consistent keys)
+        function loadFormData(type) {
+            if (type === 'passport') {
+                document.getElementById('passportSurname').value = getFromStorage('passport_surname') || '';
+                document.getElementById('passportName').value = getFromStorage('passport_name') || '';
+                document.getElementById('passportPatronymic').value = getFromStorage('passport_patronymic') || '';
+                document.getElementById('passportBirthDate').value = getFromStorage('passport_birthDate') || '';
+                document.getElementById('passportGender').value = getFromStorage('passport_gender') || '';
+                document.getElementById('passportBirthPlace').value = getFromStorage('passport_birthPlace') || '';
+                document.getElementById('passportNumber').value = getFromStorage('passport_number') || '';
+                document.getElementById('passportCode').value = getFromStorage('passport_code') || '';
+                document.getElementById('passportIssueDate').value = getFromStorage('passport_issueDate') || '';
+                document.getElementById('passportIssuer').value = getFromStorage('passport_issuer') || '';
+                document.getElementById('passportAddress').value = getFromStorage('passport_address') || '';
+
+                const passportPhoto = getFromStorage('passport_photo');
+                if (passportPhoto) {
+                    document.getElementById('passportPhotoPreview').innerHTML = `<img src="${passportPhoto}" alt="Passport photo">`;
+                }
+
+                const signatureData = getFromStorage('passport_signature');
+                if (signatureData) {
+                    const canvas = document.getElementById('passportSignature');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        updateSignaturePreview('passportSignature', 'previewSignature');
+                    };
+                    img.src = signatureData;
+                }
+            } else {
+                document.getElementById('licenseSurname').value = getFromStorage('license_surname') || '';
+                document.getElementById('licenseName').value = getFromStorage('license_name') || '';
+                document.getElementById('licensePatronymic').value = getFromStorage('license_patronymic') || '';
+                document.getElementById('licenseBirthDate').value = getFromStorage('license_birthDate') || '';
+                document.getElementById('licenseBirthPlace').value = getFromStorage('license_birthPlace') || '';
+                document.getElementById('licenseNumber').value = getFromStorage('license_number') || '';
+                document.getElementById('licenseIssueDate').value = getFromStorage('license_issueDate') || '';
+                document.getElementById('licenseExpiryDate').value = getFromStorage('license_expiryDate') || '';
+                document.getElementById('licenseIssuer').value = getFromStorage('license_issuer') || '';
+
+                const categoriesRaw = getFromStorage('license_categories') || '[]';
+                let categories = [];
+                try {
+                    categories = JSON.parse(categoriesRaw);
+                    if (!Array.isArray(categories)) categories = [];
+                } catch (e) {
+                    categories = categoriesRaw ? categoriesRaw.split(',') : [];
+                }
+                document.querySelectorAll('input[name="licenseCategory"]').forEach(checkbox => {
+                    checkbox.checked = categories.includes(checkbox.value);
+                });
+
+                const licensePhoto = getFromStorage('license_photo');
+                if (licensePhoto) {
+                    document.getElementById('licensePhotoPreview').innerHTML = `<img src="${licensePhoto}" alt="License photo">`;
+                }
+
+                const signatureData = getFromStorage('license_signature');
+                if (signatureData) {
+                    const canvas = document.getElementById('licenseSignature');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        updateSignaturePreview('licenseSignature', 'previewLicenseSignature');
+                    };
+                    img.src = signatureData;
+                }
+            }
+        }
+
+        // Save document data (uses consistent keys and class-based view)
+        function saveDocument(type) {
+            if (!validateForm(type)) return;
+
+            const formData = getFormData(type);
+
+            Object.keys(formData).forEach(key => {
+                const value = formData[key];
+                if (value !== null && value !== undefined) {
+                    if (Array.isArray(value)) {
+                        saveToStorage(`${type}_${key}`, JSON.stringify(value));
+                    } else {
+                        saveToStorage(`${type}_${key}`, value);
+                    }
+                }
+            });
+
+            // Signature
+            const signatureCanvas = document.getElementById(`${type}Signature`);
+            if (signatureCanvas) {
+                try {
+                    saveToStorage(`${type}_signature`, signatureCanvas.toDataURL());
+                } catch (e) {
+                    console.error('Signature save failed', e);
+                }
+            }
+
+            // Photo (ensure saved)
+            const photoPreview = document.getElementById(`${type}PhotoPreview`);
+            const photoImg = photoPreview.querySelector('img');
+            if (photoImg) {
+                saveToStorage(`${type}_photo`, photoImg.src);
+            }
+
+            // Add form-view class instead of inline hiding
+            const form = document.getElementById(`${type}Form`);
+            if (form) form.classList.add('form-view');
+
+            // Update preview
+            updatePreview(type);
+
+            alert(type === 'passport' ? 'Паспорт успешно создан!' : 'Водительские права успешно созданы!');
+        }
+
+        function editDocument(type) {
+            switchToEditMode(type);
+        }
+
+        // Load document data; decide view/edit based on stored data
+        function loadDocumentData(type) {
+            const hasData = getFromStorage(`${type}_surname`) !== null || getFromStorage(`${type}_photo`) !== null;
+            const form = document.getElementById(`${type}Form`);
+            if (hasData) {
+                if (form) form.classList.add('form-view');
+                updatePreview(type);
+            } else {
+                if (form) form.classList.remove('form-view');
+                loadFormData(type);
+            }
+        }
+
+        // Update preview area with stored data
+        function updatePreview(type) {
+            if (type === 'passport') {
+                document.getElementById('previewSurname').textContent = getFromStorage('passport_surname') || '—';
+                document.getElementById('previewName').textContent = getFromStorage('passport_name') || '—';
+                document.getElementById('previewPatronymic').textContent = getFromStorage('passport_patronymic') || '—';
+                document.getElementById('previewBirthDate').textContent = getFromStorage('passport_birthDate') || '—';
+                document.getElementById('previewBirthPlace').textContent = getFromStorage('passport_birthPlace') || '—';
+                document.getElementById('previewGender').textContent = getFromStorage('passport_gender') || '—';
+                document.getElementById('previewNumber').textContent = getFromStorage('passport_number') || '—';
+                document.getElementById('previewCode').textContent = getFromStorage('passport_code') || '—';
+                document.getElementById('previewIssueDate').textContent = getFromStorage('passport_issueDate') || '—';
+                document.getElementById('previewIssuer').textContent = getFromStorage('passport_issuer') || '—';
+                document.getElementById('previewAddress').textContent = getFromStorage('passport_address') || '—';
+
+                const passportPhoto = getFromStorage('passport_photo');
+                if (passportPhoto) {
+                    document.getElementById('previewPassportPhoto').innerHTML = `<img src="${passportPhoto}" alt="Passport photo">`;
+                }
+
+                const signatureData = getFromStorage('passport_signature');
+                if (signatureData) {
+                    const canvas = document.getElementById('previewSignature');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = signatureData;
+                }
+
+                document.querySelector('.passport-cover').style.display = 'none';
+                document.querySelector('.passport-content').style.display = 'block';
+            } else {
+                document.getElementById('previewLicenseSurname').textContent = getFromStorage('license_surname') || '—';
+                document.getElementById('previewLicenseName').textContent = getFromStorage('license_name') || '—';
+                document.getElementById('previewLicensePatronymic').textContent = getFromStorage('license_patronymic') || '—';
+                document.getElementById('previewLicenseBirthDate').textContent = getFromStorage('license_birthDate') || '—';
+                document.getElementById('previewLicenseBirthPlace').textContent = getFromStorage('license_birthPlace') || '—';
+                document.getElementById('previewLicenseIssueDate').textContent = getFromStorage('license_issueDate') || '—';
+                document.getElementById('previewLicenseExpiryDate').textContent = getFromStorage('license_expiryDate') || '—';
+                document.getElementById('previewLicenseNumber').textContent = getFromStorage('license_number') || '—';
+                document.getElementById('previewLicenseIssuer').textContent = getFromStorage('license_issuer') || '—';
+
+                const categoriesContainer = document.getElementById('previewLicenseCategories');
+                categoriesContainer.innerHTML = '';
+
+                const categories = JSON.parse(getFromStorage('license_categories') || '[]');
+                categories.forEach(category => {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.className = 'license-category';
+                    categoryElement.textContent = category;
+                    categoriesContainer.appendChild(categoryElement);
+                });
+
+                const licensePhoto = getFromStorage('license_photo');
+                if (licensePhoto) {
+                    document.getElementById('previewLicensePhoto').innerHTML = `<img src="${licensePhoto}" alt="License photo">`;
+                }
+
+                const signatureData = getFromStorage('license_signature');
+                if (signatureData) {
+                    const canvas = document.getElementById('previewLicenseSignature');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = signatureData;
+                }
+            }
+        }
+
+        // Initialize signatures and load default
+        document.addEventListener('DOMContentLoaded', function() {
+            setupSignaturePads();
+
+            const categoryCheckboxes = document.querySelectorAll('input[name="licenseCategory"]');
+            categoryCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    this.parentElement.classList.toggle('selected', this.checked);
+                    const cats = Array.from(document.querySelectorAll('input[name="licenseCategory"]:checked')).map(cb => cb.value);
+                    saveToStorage('license_categories', JSON.stringify(cats));
+                });
+            });
+
+            loadDocumentData('passport');
+        });
+    </script>
+</body>
+</html>
